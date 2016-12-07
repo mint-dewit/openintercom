@@ -1,0 +1,79 @@
+<html>
+  <head>
+    <title>OpenCom</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style type="text/css">
+      body {
+        background-color: #222;
+      }
+      .row {
+        margin: 0;
+      }
+      .valign-wrapper {
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="document">
+      <div class="row">
+        <div class="valign-wrapper">
+          <div class="col s12 m6 offset-m3 g4 offset-g4">
+            <div class="card-panel white" id="login">
+              <h4 class="center">Log in</h4>
+              <div class="row">
+                <div class="input-field col s12">
+                  <input type="text" id="username" v-model="username" class="validate">
+                  <label for="username">Name</label>
+                </div>
+                <div class="input-field col s12">
+                  <input type="password" id="password" v-model="password" class="validate">
+                  <label for="password">Password</label>
+                </div>
+                <a class="waves-effect waves-light btn-large" v-on:click.prevent="login">Log in</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="//rawgit.com/feathersjs/feathers-client/v1.7.1/dist/feathers.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+      const socket = io();
+
+      const app = feathers()
+        .configure(feathers.socketio(socket))
+        .configure(feathers.hooks())
+        .configure(feathers.authentication({
+          storage: window.localStorage
+        }));
+
+     new Vue({
+      el: '#login',
+      data: {
+        username: '',
+        password: ''
+      },
+      methods: {
+        login: function () {
+          app
+          .authenticate({type: 'local', 'name':this.username, 'password': this.password})
+          .then(function () { window.location.href = "/admin.html"; });
+        }
+      }
+     }) 
+    </script>
+  </body>
+</html>

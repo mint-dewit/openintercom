@@ -1,0 +1,82 @@
+<html>
+  <head>
+    <title>OpenCom</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <style>
+      .btn-channel {
+        width: 100%;
+        border-radius: 3px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        height: 54px;
+        line-height: 54px;
+        padding: 0 20px 0 20px;
+        text-align: center;
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- INTERFACE -->
+    
+    <div class="container">
+      <!--TALLY-->
+      <div class="row">
+        <div class="col s12">
+          <div class="card-panel red">
+            <h3 class="center white-text">ON-AIR</h3>
+          </div>
+        </div>
+      </div>
+      
+      <!-- NAME DISPLAY -->
+      <div class="row">
+        <div class="col s12">
+          <div class="card-panel">
+            <div class="input-field">
+              <input id="name" type="text" value="Balte">
+              <label for="name">Name:</label>
+            </div>
+            <a class="waves-effect waves-red btn-large btn-flat">
+              <i class="material-icons">mic</i>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- PUSH TO TALK -->
+      <div class="row">
+        <div class="col s12">
+          <div class="card-panel">
+            <div class="row">
+              <div class="col s6 m4 l3">
+                <a class="waves-effect waves-light red btn-channel white-text">Camera</a>
+              </div>
+              <div class="col s6 m4 l3">
+                <a class="waves-effect waves-red white btn-channel black-text">Regie</a>
+              </div>
+              <div class="col s6 m4 l3">
+                <a class="waves-effect waves-light red btn-channel white-text">Presentatie</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="//rawgit.com/feathersjs/feathers-client/v1.7.1/dist/feathers.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="http://sipjs.com/download/sip-0.7.5.js"></script>
+    <script src="js/mobile.js"></script>
+  </body>
+</html>

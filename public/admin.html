@@ -1,0 +1,211 @@
+<html>
+  <head>
+    <title>OpenCom</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    
+    <!--Import materialize.css-->
+    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <style>
+      .controls {
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+      }
+      
+      .controls .name {
+        line-height: 38px;
+        float: left;
+      }
+      
+      .controls .row {
+        margin-bottom: 0;
+      }
+      
+      .large {
+        height: 75px;
+      }
+      
+      .channel-button {
+        margin: 5px;
+        height: 65px;
+        max-width: 110px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+      
+      .switch-mute {
+        float: left;
+        margin-top: 15px;
+        max-width: 75px;
+        margin-right: 10px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
+
+      .drop-area {
+        min-height: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <audio id="remoteAudio"></audio>
+
+    <div class="controls z-depth-4" id="control">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col s4 m3">
+            <h4 class="name">{{ self.name }}</h4>
+            <a class="waves-effect waves-light btn-flat large" v-on:click="muted = !muted">
+              <i class="material-icons" style="font-size:3rem; line-height:75px;" v-show="muted">mic_off</i>
+              <i class="material-icons" style="font-size:3rem; line-height:75px;" v-show="!muted">mic</i>
+            </a>
+          </div>
+          
+          <div class="col s8 m9">
+            <div class="switch-mute center" v-for="channel in channels">
+              <span>{{ channel.name }}</span>
+              <div class="switch">
+                <label>
+                  <input type="checkbox" v-model="channel.talking" v-bind:disabled="channel.muted">
+                  <span class="lever"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="container-fluid" id="admin">
+      <div class="row">
+        <div class="col s4 m3">
+          <h4>Channels</h4>
+          <div class="collection">
+            <a v-for="(channel, i) in channels" class="collection-item" :class="{ active: sel_channel === i }">
+              <div>
+                <span v-on:click="changeChannel(i)">{{ channel.name }}</span>
+                <span class="secondary-content" v-on:click="removeChannel(channel._id)">
+                  <i class="material-icons">delete</i>
+                </span>
+              </div>
+            </a>
+            <a class="modal-trigger collection-item" href="#add_channel">
+              <i class="material-icons">add</i>Add
+            </a>
+          </div>
+        </div>
+        
+        
+        
+        <div class="col s4 m6">
+          <h4>Members</h4>
+          <ul class="collection drop-area" v-if="channels.length !== 0" v-on:drop="dropped" v-on:dragover.prevent>
+            <li class="collection-item" v-for="(user, i) in users" v-show="displayUser(user._id)">
+              <div>
+                {{ user.name }}
+                <a class="secondary-content" v-on:click.prevent="removeMember(user._id)">
+                  <i class="material-icons">delete</i>
+                </a>
+                <a class="secondary-content">
+                  <div class="switch">
+                    <label>
+                      <input type="checkbox" v-model="channels[sel_channel].users[user._id]" v-on:change="updateChannel">
+                      <span class="lever"></span>
+                    </label>
+                  </div>
+                </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+        
+        
+        
+        
+        <div class="col s4 m3">
+          <h4>Users</h4>
+          <ul class="collection">
+            <li class="collection-item" v-for="user in users" draggable="true" v-on:dragstart="dragging(user, $event)">
+              <div>
+                {{ user.name }}
+                <a class="secondary-content" v-on:click="kickUser(user._id)" v-if="user._id !== self._id">
+                  <i class="material-icons">delete</i>
+                </a>
+              </div>
+            </li>
+            
+            <li class="collection-item" data-target="add_users">
+              <span class="new badge">{{ new_users.length }}</span>
+              Add User
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      
+      
+      
+      
+    
+      <div id="add_channel" class="modal modal-fixed-footer">
+        <div class="modal-content">
+          <h4>New channel</h4>
+          <div class="row">
+            <div class="input-field col s12">
+              <input type="text" v-model="new_channel">
+              <label for="text">Name</label>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" v-on:click="registerChannel" class="modal-action modal-close waves-effect waves-light btn ">Save</a>
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Cancel</a>
+        </div>
+      </div>
+      
+      <div id="add_users" class="modal bottom-sheet">
+        <div class="modal-content">
+          <h4>New users</h4>
+          <ul class="collection" v-for="user in new_users">
+            <li class="collection-item">
+              <div class="row">
+                <div class="input-field inline">
+                  <input id="ip" type="text" v-model="user.ip" disabled>
+                  <label for="ip">IP-Address</label>
+                </div>
+                <div class="input-field inline" style="width: calc(100% - 310px)">
+                  <input id="name" type="text" v-model="user.name">
+                  <label for="name">Name</label>
+                </div>
+                <div class="switch inline" style="float:right; margin-top:2rem;">
+                  <label>
+                    Admin
+                    <input type="checkbox">
+                    <span class="lever"></span>
+                  </label>
+                </div>
+                <br />
+                <a class="waves-effect waves-teal btn-flat">Add</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat"">Exit</a>
+        </div>
+      </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="//rawgit.com/feathersjs/feathers-client/v1.7.1/dist/feathers.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="http://sipjs.com/download/sip-0.7.5.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>
