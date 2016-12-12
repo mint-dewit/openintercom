@@ -26,12 +26,12 @@
   <body>
     <!-- INTERFACE -->
     
-    <div class="container">
+    <div class="container" id="vue">
       <!--TALLY-->
       <div class="row">
         <div class="col s12">
           <div class="card-panel red">
-            <h3 class="center white-text">ON-AIR</h3>
+            <h3 class="center white-text">Tally unavailable</h3>
           </div>
         </div>
       </div>
@@ -41,11 +41,12 @@
         <div class="col s12">
           <div class="card-panel">
             <div class="input-field">
-              <input id="name" type="text" value="Balte">
+              <input placeholder id="name" type="text" v-model="self.name">
               <label for="name">Name:</label>
             </div>
             <a class="waves-effect waves-red btn-large btn-flat">
-              <i class="material-icons">mic</i>
+              <i class="material-icons" v-if="muted">mic-off</i>
+              <i class="material-icons" v-else>mic</i>
             </a>
           </div>
         </div>
@@ -56,20 +57,70 @@
         <div class="col s12">
           <div class="card-panel">
             <div class="row">
-              <div class="col s6 m4 l3">
-                <a class="waves-effect waves-light red btn-channel white-text">Camera</a>
-              </div>
-              <div class="col s6 m4 l3">
-                <a class="waves-effect waves-red white btn-channel black-text">Regie</a>
-              </div>
-              <div class="col s6 m4 l3">
-                <a class="waves-effect waves-light red btn-channel white-text">Presentatie</a>
+              <div class="col s6 m4 l3" v-for="channel in channels">
+                <a 
+                  class="waves-effect btn-channel"
+                  v-bind:class="{
+                    'white': !channel.talking, 
+                    'black-text': !channel.talking, 
+                    'red': channel.talking, 
+                    'white-text': channel.talking,  
+                    'waves-light': channel.talking, 
+                    'waves-red': !channel.talking}"
+                  v-on:click.prevent="if (!channel.muted) channel.talking = !channel.talking;"
+                  >{{ channel.name }}</a>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Modal for registering -->
+      <div id="newUser" class="modal">
+        <div class="modal-content">
+          <div v-if="!registerFailed" class="preloader-wrapper small active left">
+            <div class="spinner-layer spinner-blue-only">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div><div class="gap-patch">
+                <div class="circle"></div>
+              </div><div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
+          </div>
+          <h4 class="red-text" v-if="registerFailed">Failed</h4><h4 v-else>&nbsp;Registering new user</h4>
+          <p class="red-text" v-if="registerFailed">Failed to register. Are you sure you should be here?</p>
+          <p v-else>Please wait until you are allowed access to the system by an administrator.</p>
+        </div>
+      </div>
     </div>
+
+      <!-- Modal for being deleted -->
+      <div id="delUser" class="modal">
+        <div class="modal-content">
+          <h4 class="red-text">user deleted</h4>
+          <p class="red-text">Unfortunately your user was removed by an admin.</p>
+        </div>
+      </div>
+    </div>
+
+      <!-- Modal for admin pwd -->
+      <div id="newAdmin" class="modal">
+        <div class="modal-content">
+          <h4 v-else>You are now an admin!</h4>
+          <p v-else>Please enter a password to be able to log in to the administrator interface.</p>
+
+          <div class="input-field">
+            <input id="pwd" type="password" v-model="self.password">
+            <label for="pwd">Name:</label>
+          </div>
+
+          <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn" v-click="savePwd">Save and continue</a>
+          </div>
+        </div>
+      </div>
     
     <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
@@ -77,6 +128,8 @@
     <script src="//rawgit.com/feathersjs/feathers-client/v1.7.1/dist/feathers.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript" src="http://sipjs.com/download/sip-0.7.5.js"></script>
+    <script src="//rawgit.com/mykiimike/jen/master/jen.js"></script>
+    <script src="js/mobile-detect.js"></script>
     <script src="js/mobile.js"></script>
   </body>
 </html>

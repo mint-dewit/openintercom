@@ -14,6 +14,7 @@ const app = feathers()
 
 const users = app.service('users');
 const channels = app.service('channels');
+const temps = app.service('temps');
 
 app.authenticate()
   .then(res => {
@@ -21,11 +22,26 @@ app.authenticate()
     controls.self = res.data;
     authenticated = true;
     users.find()
-      .then(res => admin.users = res)
+      .then(res => {
+        for (user of res) {
+          admin.users.push(user);
+        }
+      })
+    temps.find()
+      .then(res => {
+        for (user of res) {
+          if (user.newuser === false) {
+            admin.temps.push(user);
+          } else {
+            admin.new_users.push(user);
+          }
+        }
+      })
     channels.find()
       .then(res => {
-        admin.channels = res.data;
-        for (channel of res.data) {
+        console.log(res);
+        admin.channels = res;
+        for (channel of res) {
           for (user in channel.users) {
             if (user === controls.self._id) {
               controls.channels.push({
@@ -100,6 +116,42 @@ channels.on('updated', res => {
   }
 })
 
+users.on('updated', res => {
+  for (let user of admin.users) {
+    if (user._id === res.id) user = res;
+  }
+})
+users.on('removed', res => {
+  for (var u in admin.users) {
+    if (admin.users[u]._id === res._id) {
+      admin.users.splice(u,1);
+    }
+  }
+})
+
+temps.on('updated', res => {
+  for (var user in admin.new_users) {
+    if (admin.new_users[user]._id === res._id) {
+      console.log('user '+res._id+' was updated');
+      if (res.newuser === false) {
+        admin.temps.push(res);
+        admin.new_users.splice(user, 1);
+      }
+    }
+  }
+})
+temps.on('created', res => {
+  console.log(res);
+  admin.new_users.push(res);
+})
+temps.on('removed', res => {
+  for (var u in admin.temps) {
+    if (admin.temps[u]._id === res._id) {
+      admin.temps.splice(u,1);
+    }
+  }
+})
+
 var admin = new Vue({
   debug: true,
   el: '#admin',
@@ -116,6 +168,7 @@ var admin = new Vue({
       admin: true
     },
     users: [],
+    temps: [],
     new_users: []
   },
   methods: {
@@ -125,7 +178,36 @@ var admin = new Vue({
           this.users.splice(i, 1);
         }
       }
-      // TODO: create middleware to remove from channels
+      users.remove(_id);
+      for (var channel of this.channels) {
+        for (var user in channel.users) {
+          if (user === _id) {
+            channel.users.splice(_id, 1);
+            channels.update(channel._id, channel);
+          }
+        }
+      }
+    },
+    kickTemp: function (_id) {
+      for (var i in this.temps) {
+        if (this.temps[i]._id === _id) {
+          this.temps.splice(i, 1);
+        }
+      }
+      temps.remove(_id);
+      for (var channel of this.channels) {
+        for (var user in channel.users) {
+          if (user === _id) {
+            channel.users[_id] = undefined;
+            channels.update(channel._id, channel);
+          }
+        }
+      }
+    },
+    addUser: function (user) {
+      console.log(user)
+      user.newuser = false;
+      temps.update(user._id, user);
     },
     removeChannel: function (_id) {
       channels.remove(_id)
@@ -165,7 +247,7 @@ var admin = new Vue({
     },
     dropped: function (event) {
       var _id = event.dataTransfer.getData('text/plain');
-      var users = this.channels[this.sel_channel].users;
+      var users = this.channels[this.sel_channel].users ;
       var speaking = !(event.ctrlKey);
       if (users[_id] === undefined) {
         Vue.set(users, _id, speaking);
@@ -207,6 +289,7 @@ controls = new Vue({
         delete ptt_ignore[ignore]
         return
       }
+      if (!this.channels[channel]) return;
       if (this.channels[channel].muted) return;
       if (direction === 'down' && this.channels[channel].talking && pushed === -1) {
         ptt_ignore.push(channel)

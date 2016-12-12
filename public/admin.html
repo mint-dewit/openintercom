@@ -120,6 +120,24 @@
                 </a>
               </div>
             </li>
+
+
+            <li class="collection-item" v-for="(user, i) in temps" v-show="displayUser(user._id)">
+              <div>
+                {{ user.name }}
+                <a class="secondary-content" v-on:click.prevent="removeMember(user._id)">
+                  <i class="material-icons">delete</i>
+                </a>
+                <a class="secondary-content">
+                  <div class="switch">
+                    <label>
+                      <input type="checkbox" v-model="channels[sel_channel].users[user._id]" v-on:change="updateChannel">
+                      <span class="lever"></span>
+                    </label>
+                  </div>
+                </a>
+              </div>
+            </li>
           </ul>
         </div>
         
@@ -133,6 +151,15 @@
               <div>
                 {{ user.name }}
                 <a class="secondary-content" v-on:click="kickUser(user._id)" v-if="user._id !== self._id">
+                  <i class="material-icons">delete</i>
+                </a>
+              </div>
+            </li>
+
+            <li class="collection-item" v-for="user in temps" draggable="true" v-on:dragstart="dragging(user, $event)">
+              <div>
+                {{ user.name }}
+                <a class="secondary-content" v-on:click="kickTemp(user._id)" v-if="user._id !== self._id">
                   <i class="material-icons">delete</i>
                 </a>
               </div>
@@ -170,32 +197,38 @@
       <div id="add_users" class="modal bottom-sheet">
         <div class="modal-content">
           <h4>New users</h4>
-          <ul class="collection" v-for="user in new_users">
-            <li class="collection-item">
-              <div class="row">
-                <div class="input-field inline">
-                  <input id="ip" type="text" v-model="user.ip" disabled>
-                  <label for="ip">IP-Address</label>
-                </div>
-                <div class="input-field inline" style="width: calc(100% - 310px)">
-                  <input id="name" type="text" v-model="user.name">
-                  <label for="name">Name</label>
-                </div>
-                <div class="switch inline" style="float:right; margin-top:2rem;">
-                  <label>
-                    Admin
-                    <input type="checkbox">
-                    <span class="lever"></span>
-                  </label>
-                </div>
-                <br />
-                <a class="waves-effect waves-teal btn-flat">Add</a>
-              </div>
-            </li>
-          </ul>
+          <table>
+            <thead>
+              <th>IP-Address</th> 
+              <th>Name</th>
+              <th>Admin</th>
+              <th>&nbsp;</th>
+            </thead>
+            <tbody>
+              <tr v-for="user in new_users">
+                <td>{{ user.ip }}</td>
+                <td>
+                  <div class="input-field inline" style="width: 100%: margin-top: 0">
+                    <input id="name" type="text" v-model="user.name">
+                  </div>
+                </td>
+                <td>
+                  <div class="switch inline" style="" v-if="user.client === 'desktop'">
+                    <label>
+                      <input type="checkbox" v-model="user.admin">
+                      <span class="lever"></span>
+                    </label>
+                  </div>
+                </td>
+                <td>
+                  <a class="waves-effect waves-teal btn-flat" v-on:click.prevent="addUser(user)">Add</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div class="modal-footer">
-          <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat"">Exit</a>
+          <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Exit</a>
         </div>
       </div>
     </div>
