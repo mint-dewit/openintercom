@@ -4,11 +4,14 @@ const register = require('./register');
 
 const globalHooks = require('../../../hooks');
 const hooks = require('feathers-hooks');
+const auth = require('feathers-authentication').hooks;
 
 
 exports.before = {
   all: [],
-  find: [],
+  find: [
+    auth.verifyToken(),
+    auth.restrictToAuthenticated()],
   get: [],
   create: [
     register()],

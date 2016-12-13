@@ -54,7 +54,7 @@ channels.find()
 			temps.create({client: client})
 				.then(res => {
 					console.log(res);
-					localStorage.setItem('_id',res._id);
+					localStorage.setItem('_id', res._id);
 					controls.self = res;
 				})
 				.catch(error => {
