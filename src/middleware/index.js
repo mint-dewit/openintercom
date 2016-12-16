@@ -1,10 +1,12 @@
 'use strict';
 
+const fsapi = require('./fsapi');
+
 const setup = require('./setup');
 
 const handler = require('feathers-errors/handler');
 const notFound = require('./not-found-handler');
-const logger = require('./logger');;
+const logger = require('./logger');
 const useragent = require('express-useragent');
 
 module.exports = function() {
@@ -15,6 +17,7 @@ module.exports = function() {
   app.use(useragent.express());
 
   app.use('/setup', setup(app))
+  app.use('/fsapi', fsapi(app))
 
   app.use(notFound());
   app.use(logger(app));

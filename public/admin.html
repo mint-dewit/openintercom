@@ -59,7 +59,7 @@
         <div class="row">
           <div class="col s4 m3">
             <h4 class="name">{{ self.name }}</h4>
-            <a class="waves-effect waves-light btn-flat large" v-on:click="muted = !muted">
+            <a class="waves-effect waves-light btn-flat large" v-on:click="toggleMute">
               <i class="material-icons" style="font-size:3rem; line-height:75px;" v-show="muted">mic_off</i>
               <i class="material-icons" style="font-size:3rem; line-height:75px;" v-show="!muted">mic</i>
             </a>

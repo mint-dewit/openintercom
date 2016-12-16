@@ -20,7 +20,7 @@ module.exports = function(app) {
 
   			var user = {
           name: req.query.user,
-          password: req.query.password, // HOW THE FUCK DO I HASh A PASSWORD FFS
+          password: req.query.password, 
           client: req.useragent.isMobile ? 'mobile' : req.useragent.isTablet ? 'tablet' : 'desktop',
           ip: ip,
           admin: true,

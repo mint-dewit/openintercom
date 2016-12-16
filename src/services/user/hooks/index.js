@@ -1,5 +1,7 @@
 'use strict';
 
+const freeswitch = require('./freeswitch');
+
 const globalHooks = require('../../../hooks');
 const hooks = require('feathers-hooks');
 const auth = require('feathers-authentication').hooks;
@@ -47,7 +49,8 @@ exports.after = {
   all: [hooks.remove('password')],
   find: [],
   get: [],
-  create: [],
+  create: [
+    globalHooks.fsAddUser()],
   update: [],
   patch: [],
   remove: []

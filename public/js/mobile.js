@@ -19,6 +19,21 @@ var user_id = window.localStorage._id;
 
 $('.modal').modal({dismissible: false});
 
+var ua;
+var sessions;
+var config;
+var options = {
+  media: {
+    constraints: {
+      audio: true,
+      video: false
+    },
+    render: {
+      remote: document.getElementById('remoteAudio')
+    }
+  }
+};
+
 channels.find()
 	.then(channels => {
 		if (user_id) {
@@ -27,20 +42,32 @@ channels.find()
 				.then(res => {
 					if (res.newuser === true) $('#newUser').modal('open');
 					else {
+				    config = {
+				      uri: res._id+'@192.168.0.105',
+				      wsServers: 'wss://192.168.0.105:7443',
+				      authorizationUser: res._id,
+				      password: '4321',
+				      iceCheckingTimeout: 180000
+				    }
+				    ua = new SIP.UA(config);
 						for (let channel of channels) {
-							if (channel.users[res._id] !== undefined) controls.channels.push({
-								_id: channel._id,
-								name: channel.name,
-								talking: false,
-								muted: !(channel.users[res._id]),
-							});
+							if (channel.users[res._id] !== undefined) {
+								sessions[channel._id] = ua.invite(channel.room.toString(), options)
+								controls.channels.push({
+									_id: channel._id,
+									name: channel.name,
+									talking: false,
+									muted: !(channel.users[res._id]),
+								});
+							}
 						}
 					}
 					controls.self = res;
 				})
-				.catch(() => {
-					window.localStorage.removeItem('_id');
-					window.location.reload();
+				.catch((err) => {
+					console.log(err);
+					/*window.localStorage.removeItem('_id');
+					window.location.reload();*/
 				})
 		} else {
 			// create a user!
@@ -71,15 +98,28 @@ temps.on('updated', (res) => {
 		}*/
 		if (controls.self.newuser && res.newuser === false) {
 			$('#newUser').modal('close');
+
+	    config = {
+	      uri: res._id+'@192.168.0.105',
+	      wsServers: 'wss://192.168.0.105:7443',
+	      authorizationUser: res._id,
+	      password: '4321',
+	      iceCheckingTimeout: 180000
+	    }
+	    ua = new SIP.UA(config);
+
 			channels.find()
 				.then(channels => {
 					for (let channel of channels) {
-						if (channel.users[res._id] !== undefined) controls.channels.push({
-							_id: channel._id,
-							name: channel.name,
-							talking: false,
-							muted: !(channel.users[res._id]),
-						});
+						if (channel.users[res._id] !== undefined) {
+							sessions[channel._id] = ua.invite(channel.room.toString(), options);
+							controls.channels.push({
+								_id: channel._id,
+								name: channel.name,
+								talking: false,
+								muted: !(channel.users[res._id]),
+							});
+						}
 					}
 				});
 		}
@@ -103,14 +143,20 @@ channels.on('updated', res => {
     if (resHasId) {
       hasChannel.muted = !(res.users[controls.self._id])
       if (hasChannel.muted && hasChannel.talking) hasChannel.talking = false;
+      if (res.muted) sessions[res._id].mute();
+      else sessions[res._id].unmute();
     }
     else {
       for (var i in controls.channels) {
-        if (controls.channels[i]._id === res._id) controls.channels.splice(i, 1);
+        if (controls.channels[i]._id === res._id) {
+        	sessions[res._id].bye();
+        	controls.channels.splice(i, 1);
+        }
       }
     }
   } else {
     if (resHasId) {
+    	sessions[res._id] = ua.invite(res.room.toString(), options);
       controls.channels.push({
         _id: res._id,
         name: res.name,
@@ -120,44 +166,6 @@ channels.on('updated', res => {
     }
   }
 })
-
-/*app.authenticate()
-.then((res) => {
-	admin.self = res;
-	if (res.newuser) {
-		$('#newUser').modal('open');
-	}
-})
-.catch(error => {
-	console.log('no login:', error.code, 'register new user!');
-
-	$('#newUser').modal('open');
-
-	const hd1 = new Jen(true);
-	const pwd = hd1.password(20,30);
-	const platform = new MobileDetect(window.navigator.userAgent);
-	const client = platform.tablet() ? 'tablet' : platform.mobile() ? 'mobile' : 'desktop';
-	users.create({password:pwd,client:client})
-		.then(user => {
-			controls.self = user;
-			app.authenticate({type: 'local', 'name':user.name, 'password':pwd}); // fuck shit when user leaves before register. we end up with trassssh
-		})
-		.catch(error => {
-			controls.registerFailed = true;
-		})
-})
-
-users.on('updated', (res) => {
-	if (res._id === controls.self._id) {
-		if (controls.self.admin === false && res.admin) {
-			$('#newadmin').modal('open');
-		}
-		if (controls.self.newuser && res.newuser === false) {
-			$('#newuser').modal('close');
-		}
-		controls.self = res;
-	}
-})*/
 
 const controls = new Vue({
 	el: '#vue',

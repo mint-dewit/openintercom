@@ -2,6 +2,7 @@ var key_order = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'q', 'w', 'e'
 var ptt_ignore = [];
 var ptt_pushed = [];
 var authenticated = false;
+var sessions = {};
 
 const socket = io();
 
@@ -16,17 +17,41 @@ const users = app.service('users');
 const channels = app.service('channels');
 const temps = app.service('temps');
 
+var ua;
+var options = {
+  media: {
+    constraints: {
+      audio: true,
+      video: false
+    },
+    render: {
+      remote: document.getElementById('remoteAudio')
+    }
+  }
+};
+
 app.authenticate()
   .then(res => {
     admin.self = res.data;
     controls.self = res.data;
     authenticated = true;
+
+    config = {
+      uri: res.data._id+'@192.168.0.105',
+      wsServers: 'wss://192.168.0.105:7443',
+      authorizationUser: res.data._id,
+      password: '4321',
+      iceCheckingTimeout: 180000
+    }
+    ua = new SIP.UA(config);
+
     users.find()
       .then(res => {
         for (user of res) {
           admin.users.push(user);
         }
       })
+
     temps.find()
       .then(res => {
         for (user of res) {
@@ -37,6 +62,7 @@ app.authenticate()
           }
         }
       })
+
     channels.find()
       .then(res => {
         console.log(res);
@@ -44,6 +70,7 @@ app.authenticate()
         for (channel of res) {
           for (user in channel.users) {
             if (user === controls.self._id) {
+              sessions[channel._id] = ua.invite(channel.room.toString(), options);
               controls.channels.push({
                 _id: channel._id,
                 name: channel.name,
@@ -98,14 +125,20 @@ channels.on('updated', res => {
     if (resHasId) {
       hasChannel.muted = !(res.users[controls.self._id])
       if (hasChannel.muted && hasChannel.talking) hasChannel.talking = false;
+      if (res.muted) sessions[res._id].mute();
+      else sessions[res._id].unmute();
     }
     else {
       for (i in controls.channels) {
-        if (controls.channels[i]._id === res._id) controls.channels.splice(i, 1);
+        if (controls.channels[i]._id === res._id) {
+          controls.channels.splice(i, 1);
+          sessions[res._id].bye();
+        }
       }
     }
   } else {
     if (resHasId) {
+      sessions[res._id] = ua.invite(res.room.toString(), options);
       controls.channels.push({
         _id: res._id,
         name: res.name,
@@ -301,11 +334,28 @@ controls = new Vue({
       else if (pushed !== -1) {
         delete ptt_pushed[pushed];
         this.channels[channel].talking = false;
+        sessions[this.channels[channel]._id].mute();
       } else if (direction === 'down') {
         this.channels[channel].talking = true;
+        sessions[this.channels[channel]._id].unmute();
         ptt_pushed.push(channel)
       }
       
+    },
+    toggleMute: function() {
+      if (this.muted) {
+        for (var session in sessions) {
+          sessions[session].unmute(true);
+          console.log(sessions[session]);
+        }
+        this.muted = false;
+      } else {
+        for (var session in sessions) {
+          sessions[session].mute(true);
+          console.log(sessions[session]);
+        }
+        this.muted = true;
+      }
     }
   }
 })
@@ -315,36 +365,8 @@ $('.modal').modal();
 $(document).on('keydown', (event) => {controls.pushToTalk(event.key, 'down')});
 $(document).on('keyup', (event) => {controls.pushToTalk(event.key, 'up')});
 
-var config = {
-  // Replace this IP address with your FreeSWITCH IP address
-  uri: 'balte@192.168.0.105',
 
-  // Replace this IP address with your FreeSWITCH IP address
-  // and replace the port with your FreeSWITCH port
-  wsServers: 'wss://192.168.0.105:7443',
-
-  // FreeSWITCH Default Username
-  authorizationUser: '1000',
-
-  password: '4321',
-
-  iceCheckingTimeout: 180000
-};
-
-var options = {
-        media: {
-            constraints: {
-                audio: true,
-                video: false
-            },
-            render: {
-                remote: document.getElementById('remoteAudio')
-            }
-        }
-    };
-
-// var ua = new SIP.UA(config);
-// var session = ua.invite('3300', options)
+// var session = ua.invite('3000', options)
 // var session = ua.invite('9195', options)
 // session.mute()
 

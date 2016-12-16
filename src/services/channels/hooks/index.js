@@ -1,5 +1,7 @@
 'use strict';
 
+const room = require('./room');
+
 const globalHooks = require('../../../hooks');
 const hooks = require('feathers-hooks');
 const auth = require('feathers-authentication').hooks;
@@ -8,7 +10,7 @@ exports.before = {
   all: [],
   find: [],
   get: [],
-  create: [],
+  create: [room()],
   update: [],
   patch: [],
   remove: []

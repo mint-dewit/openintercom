@@ -38,7 +38,8 @@
     "nedb": "^1.8.0",
     "passport": "^0.3.2",
     "serve-favicon": "^2.3.2",
-    "winston": "^2.3.0"
+    "winston": "^2.3.0",
+    "xml2js": "^0.4.17"
   },
   "devDependencies": {
     "jshint": "^2.9.4",
