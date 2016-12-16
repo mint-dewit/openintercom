@@ -27,7 +27,7 @@
     <audio id="remoteAudio"></audio>
     <!-- INTERFACE -->
     
-    <div class="container" id="vue">
+    <div class="container" id="control">
       <!--TALLY-->
       <div class="row">
         <div class="col s12">
@@ -45,7 +45,7 @@
               <input placeholder id="name" type="text" v-model="self.name">
               <label for="name">Name:</label>
             </div>
-            <a class="waves-effect waves-red btn-large btn-flat">
+            <a class="waves-effect waves-red btn-large btn-flat" v-on:click="toggleMute">
               <i class="material-icons" v-if="muted">mic-off</i>
               <i class="material-icons" v-else>mic</i>
             </a>
@@ -132,5 +132,7 @@
     <script src="//rawgit.com/mykiimike/jen/master/jen.js"></script>
     <script src="js/mobile-detect.js"></script>
     <script src="js/mobile.js"></script>
+    <script src="js/admin/vue-controls.js"></script>
+    <script src="js/client/feathers.js"></script>
   </body>
 </html>
