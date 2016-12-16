@@ -19,15 +19,14 @@ controls = new Vue({
       var ignore = ptt_ignore.indexOf(channel);
       var pushed = ptt_pushed.indexOf(channel);
 
-      if (admin !== undefined) {
-        if (admin.sub_interface === true) return;}
+      if (admin !== undefined) if (admin.sub_interface === true) return;
       
       // if channel is talking already, ignore down and incoming up
       if (channel === -1 || ignore !== -1) {
         delete ptt_ignore[ignore]
         return
       }
-      if (!this.channels[channel]) return;
+      if (!this.channels[channel] || this.muted) return;
       if (this.channels[channel].muted) return;
       if (direction === 'down' && this.channels[channel].talking && pushed === -1) {
         ptt_ignore.push(channel)
@@ -49,15 +48,22 @@ controls = new Vue({
     },
     toggleMute: function() {
       if (this.muted) {
-        for (var session in sessions) {
-          sessions[session].unmute(true);
+        for (var channel of this.channels) {
+          if (channel.talking) sessions[channel._id].unmute();
         }
         this.muted = false;
       } else {
         for (var session in sessions) {
-          sessions[session].mute(true);
+          sessions[session].mute();
         }
         this.muted = true;
+      }
+    },
+    toggleChannel: function (channel) {
+      if (channel.talking) {
+        sessions[channel._id].unmute();
+      } else {
+        sessions[channel._id].mute();
       }
     }
   }

@@ -9,7 +9,8 @@ app.authenticate()
       wsServers: 'wss://192.168.0.105:7443',
       authorizationUser: res.data._id,
       password: '4321',
-      iceCheckingTimeout: 180000
+      iceCheckingTimeout: 180000,
+      log: {builtinEnabled: false}
     }
     ua = new SIP.UA(config);
 

@@ -70,7 +70,7 @@
               <span>{{ channel.name }}</span>
               <div class="switch">
                 <label>
-                  <input type="checkbox" v-model="channel.talking" v-bind:disabled="channel.muted">
+                  <input type="checkbox" v-model="channel.talking" v-bind:disabled="channel.muted" v-on:change="toggleChannel(channel)">
                   <span class="lever"></span>
                 </label>
               </div>
@@ -243,5 +243,6 @@
     <script src="js/admin/vue-controls.js"></script>
     <script src="js/admin/vue-admin.js"></script>
     <script src="js/admin/feathers.js"></script>
+    <script type="text/javascript">$('.modal').modal()</script>
   </body>
 </html>

@@ -1,5 +1,7 @@
 'use strict'
 
+$('.modal').modal({dismissible: false});
+
 var key_order = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'];
 var ptt_ignore = [];
 var ptt_pushed = [];
@@ -19,8 +21,6 @@ const channels = app.service('channels');
 const temps = app.service('temps');
 var user_id = window.localStorage._id;
 
-$('.modal').modal({dismissible: false});
-
 var ua;
 var sessions;
 var config;
@@ -38,5 +38,3 @@ var options = {
 
 $(document).on('keydown', (event) => {controls.pushToTalk(event.key, 'down')});
 $(document).on('keyup', (event) => {controls.pushToTalk(event.key, 'up')});
-
-$('.modal').modal({dismissible: false});

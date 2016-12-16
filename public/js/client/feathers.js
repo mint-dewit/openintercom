@@ -17,6 +17,7 @@ channels.find()
 						for (let channel of channels) {
 							if (channel.users[res._id] !== undefined) {
 								sessions[channel._id] = ua.invite(channel.room.toString(), options)
+								sessions[channel._id].mute();
 								controls.channels.push({
 									_id: channel._id,
 									name: channel.name,
@@ -29,9 +30,8 @@ channels.find()
 					controls.self = res;
 				})
 				.catch((err) => {
-					console.warn(err);
-					/*window.localStorage.removeItem('_id');
-					window.location.reload();*/
+					window.localStorage.removeItem('_id');
+					window.location.reload();
 				})
 		} else {
 			// create a user!
@@ -121,6 +121,7 @@ channels.on('updated', res => {
   } else {
     if (resHasId) {
     	sessions[res._id] = ua.invite(res.room.toString(), options);
+    	sessions[res._id].mute();
       controls.channels.push({
         _id: res._id,
         name: res.name,

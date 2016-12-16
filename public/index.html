@@ -68,7 +68,7 @@
                     'white-text': channel.talking,  
                     'waves-light': channel.talking, 
                     'waves-red': !channel.talking}"
-                  v-on:click.prevent="if (!channel.muted) channel.talking = !channel.talking;"
+                  v-on:click.prevent="if (!channel.muted) channel.talking = !channel.talking; toggleChannel(channel);"
                   >{{ channel.name }}</a>
               </div>
             </div>
