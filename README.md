@@ -17,21 +17,23 @@ Getting up and running is as easy as 1, 2, 3.
     cd path/to/OpenCom; npm install
     ```
 
-3. Start your app
+3. generate ssl certificates for your node server in OpenCom/certs (cert.pem and key.pem)
+
+4. Start your app
     
     ```
     npm start
     ```
 
-4. Make sure you have [FreeSwitch](http://freeswitch.org/) installed.
+5. Make sure you have [FreeSwitch](http://freeswitch.org/) installed.
 
-5. Make sure NodeJS has read and write access to the FreeSwitch Directory configuration
+6. Make sure NodeJS has read and write access to the FreeSwitch Directory configuration
 
-6. Start FreeSwitch.
+7. Start FreeSwitch.
 
-7. Go to https://[your-ip]:3030/setup?user=[admin-username]?password=[admin-password] to set up your admin user
+8. Go to https://[your-ip]:3030/setup?user=[admin-username]?password=[admin-password] to set up your admin user
 
-8. Go to https://[your-ip]:7443 and validate the certificate, next go to https://[your-ip]:3030/admin.html or https://[your-ip]:3030 and you're good to go
+9. Go to https://[your-ip]:7443 and validate the certificate, next go to https://[your-ip]:3030/admin.html or https://[your-ip]:3030 and you're good to go
 
 ## Changelog
 
