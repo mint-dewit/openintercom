@@ -11,13 +11,14 @@ channels.find()
 				      wsServers: 'wss://192.168.0.105:7443',
 				      authorizationUser: res._id,
 				      password: '4321',
-				      iceCheckingTimeout: 180000
+				      iceCheckingTimeout: 180000,
+      				log: {builtinEnabled: false}
 				    }
 				    ua = new SIP.UA(config);
 						for (let channel of channels) {
 							if (channel.users[res._id] !== undefined) {
-								sessions[channel._id] = ua.invite(channel.room.toString(), options)
-								sessions[channel._id].mute();
+								sessions[channel._id] = new session(ua, channel.room, options) // = ua.invite(channel.room.toString(), options)
+								// sessions[channel._id].mute();
 								controls.channels.push({
 									_id: channel._id,
 									name: channel.name,
@@ -68,7 +69,8 @@ temps.on('updated', (res) => {
 	      wsServers: 'wss://192.168.0.105:7443',
 	      authorizationUser: res._id,
 	      password: '4321',
-	      iceCheckingTimeout: 180000
+	      iceCheckingTimeout: 180000,
+      	log: {builtinEnabled: false}
 	    }
 	    ua = new SIP.UA(config);
 
@@ -107,8 +109,7 @@ channels.on('updated', res => {
     if (resHasId) {
       hasChannel.muted = !(res.users[controls.self._id])
       if (hasChannel.muted && hasChannel.talking) hasChannel.talking = false;
-      if (res.muted) sessions[res._id].mute();
-      else sessions[res._id].unmute();
+      if (hasChannel.muted) sessions[res._id].mute();
     }
     else {
       for (var i in controls.channels) {

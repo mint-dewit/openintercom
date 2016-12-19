@@ -39,8 +39,8 @@ app.authenticate()
         for (channel of res) {
           for (user in channel.users) {
             if (user === controls.self._id) {
-              sessions[channel._id] = ua.invite(channel.room.toString(), options);
-              sessions[channel._id].mute();
+              sessions[channel._id] = new session(ua, channel.room, config) /*ua.invite(channel.room.toString(), options);
+              sessions[channel._id].mute();*/
               controls.channels.push({
                 _id: channel._id,
                 name: channel.name,
@@ -95,8 +95,7 @@ channels.on('updated', res => {
     if (resHasId) {
       hasChannel.muted = !(res.users[controls.self._id])
       if (hasChannel.muted && hasChannel.talking) hasChannel.talking = false;
-      if (res.muted) sessions[res._id].mute();
-      else sessions[res._id].unmute();
+      if (hasChannel.muted) sessions[res._id].mute();
     }
     else {
       for (i in controls.channels) {
@@ -108,7 +107,7 @@ channels.on('updated', res => {
     }
   } else {
     if (resHasId) {
-      sessions[res._id] = ua.invite(res.room.toString(), options);
+      sessions[res._id] = new session(ua, res.room, options); // ua.invite(res.room.toString(), options);
       controls.channels.push({
         _id: res._id,
         name: res.name,
