@@ -40,6 +40,7 @@ app.authenticate()
           for (user in channel.users) {
             if (user === controls.self._id) {
               sessions[channel._id] = ua.invite(channel.room.toString(), options);
+              sessions[channel._id].mute();
               controls.channels.push({
                 _id: channel._id,
                 name: channel.name,

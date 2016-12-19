@@ -1,10 +1,10 @@
 # OpenCom
 
-> web server for the OpenCom broadcast intercom project
+> an open source digital intercom system for live television broadcastst
 
 ## About
 
-This project uses [Feathers](http://feathersjs.com). An open source web framework for building modern real-time applications.
+This project was created by [Balte de Wit](http://balte.nl) as his end project (Profiel Werkstuk) at (CSG Prins Maurits)[http://csgpm.nl]. This project's goal is to provide community based TV channels with a very powerful multi channel digital intercom system.
 
 ## Getting Started
 
@@ -23,35 +23,28 @@ Getting up and running is as easy as 1, 2, 3.
     npm start
     ```
 
-## Testing
+4. Make sure you have [FreeSwitch](http://freeswitch.org/) installed.
 
-Simply run `npm test` and all your tests in the `test/` directory will be run.
+5. Make sure NodeJS has read and write access to the FreeSwitch Directory configuration
 
-## Scaffolding
+6. Start FreeSwitch.
 
-Feathers has a powerful command line interface. Here are a few things it can do:
+7. Go to https://[your-ip]:3030/setup?user=[admin-username]?password=[admin-password] to set up your admin user
 
-```
-$ npm install -g feathers-cli             # Install Feathers CLI
-
-$ feathers generate service               # Generate a new Service
-$ feathers generate hook                  # Generate a new Hook
-$ feathers generate model                 # Generate a new Model
-$ feathers help                           # Show all commands
-```
-
-## Help
-
-For more information on all the things you can do with Feathers visit [docs.feathersjs.com](http://docs.feathersjs.com).
+8. Go to https://[your-ip]:7443 and validate the certificate, next go to https://[your-ip]:3030/admin.html or https://[your-ip]:3030 and you're good to go
 
 ## Changelog
 
-__0.1.0__
+__16.12.0__
 
-- Initial release
+- Initial set up on GitHub
+
+__16.12.1__
+
+- First actually working project, with many bugs still
 
 ## License
 
 Copyright (c) 2016
 
-Licensed under the [MIT license](LICENSE).
+Licensed under the [GPL-V3 license](LICENSE).
