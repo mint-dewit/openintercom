@@ -78,7 +78,7 @@ temps.on('updated', (res) => {
 				.then(channels => {
 					for (let channel of channels) {
 						if (channel.users[res._id] !== undefined) {
-							sessions[channel._id] = ua.invite(channel.room.toString(), options);
+							sessions[channel._id] = new session(ua, channel.room, options)
 							controls.channels.push({
 								_id: channel._id,
 								name: channel.name,
@@ -121,7 +121,7 @@ channels.on('updated', res => {
     }
   } else {
     if (resHasId) {
-    	sessions[res._id] = ua.invite(res.room.toString(), options);
+    	sessions[res._id] = new session(ua, res.room, options)
     	sessions[res._id].mute();
       controls.channels.push({
         _id: res._id,
