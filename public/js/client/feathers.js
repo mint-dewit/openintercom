@@ -1,3 +1,15 @@
+const socket = io();
+
+const app = feathers()
+  .configure(feathers.socketio(socket))
+  .configure(feathers.hooks())
+  .configure(feathers.authentication({
+    storage: window.localStorage
+  }));
+
+const channels = app.service('channels');
+const temps = app.service('temps');
+
 channels.find()
 	.then(channels => {
 		if (user_id) {
@@ -7,8 +19,8 @@ channels.find()
 					if (res.newuser === true) $('#newUser').modal('open');
 					else {
 				    config = {
-				      uri: res._id+'@192.168.0.105',
-				      wsServers: 'wss://192.168.0.105:7443',
+				      uri: res._id+'@'+window.location.hostname,
+				      wsServers: 'wss://'+window.location.hostname+':7443',
 				      authorizationUser: res._id,
 				      password: '4321',
 				      iceCheckingTimeout: 180000,
@@ -65,8 +77,8 @@ temps.on('updated', (res) => {
 			$('#newUser').modal('close');
 
 	    config = {
-	      uri: res._id+'@192.168.0.105',
-	      wsServers: 'wss://192.168.0.105:7443',
+	      uri: res._id+'@'+window.location.hostname,
+	      wsServers: 'wss://'+window.location.hostname+':7443',
 	      authorizationUser: res._id,
 	      password: '4321',
 	      iceCheckingTimeout: 180000,

@@ -19,8 +19,8 @@ app.authenticate()
     authenticated = true;
 
     config = {
-      uri: res.data._id+'@192.168.0.105',
-      wsServers: 'wss://192.168.0.105:7443',
+      uri: res.data._id+'@'+window.location.hostname,
+      wsServers: 'wss://'+window.location.hostname+':7443',
       authorizationUser: res.data._id,
       password: '4321',
       iceCheckingTimeout: 180000,
