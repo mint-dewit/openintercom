@@ -108,3 +108,6 @@ admin = new Vue({
     }
   }
 })
+
+$('input[type=text]').on('click', ()=>{admin.sub_interface = true});
+$('input[type=text]').on('focusout', ()=>{admin.sub_interface = false});

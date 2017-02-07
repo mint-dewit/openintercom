@@ -1,3 +1,17 @@
+const socket = io();
+const app = feathers()
+  .configure(feathers.socketio(socket))
+  .configure(feathers.hooks())
+  .configure(feathers.authentication({
+    storage: window.localStorage
+  }));
+
+const users = app.service('users');
+const channels = app.service('channels');
+const temps = app.service('temps');
+
+var authenticated = false;
+
 app.authenticate()
   .then(res => {
     admin.self = res.data;

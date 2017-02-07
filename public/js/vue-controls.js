@@ -1,3 +1,10 @@
+var sessions = {};
+var ua;
+
+var key_order = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'];
+var ptt_ignore = [];
+var ptt_pushed = [];
+
 controls = new Vue({
   el: '#control',
   data: {
@@ -68,3 +75,6 @@ controls = new Vue({
     }
   }
 })
+
+$(document).on('keydown', (event) => {controls.pushToTalk(event.key, 'down')});
+$(document).on('keyup', (event) => {controls.pushToTalk(event.key, 'up')});
