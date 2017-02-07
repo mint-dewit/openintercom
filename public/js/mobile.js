@@ -1,0 +1,1 @@
+var user_id = window.localStorage._id;

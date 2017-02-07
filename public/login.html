@@ -42,6 +42,35 @@
       </div>
     </div>
     
-    <script src="dist/login.bundle.js"></script>
+    <script src="js/lib/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="js/lib/materialize.min.js"></script>
+    <script src="js/lib/vue.js"></script>
+    <script src="js/lib/feathers.js"></script>
+    <script src="js/lib/socket.io-1.4.5.js"></script>
+    <script type="text/javascript">
+      const socket = io();
+
+      const app = feathers()
+        .configure(feathers.socketio(socket))
+        .configure(feathers.hooks())
+        .configure(feathers.authentication({
+          storage: window.localStorage
+        }));
+
+     new Vue({
+      el: '#login',
+      data: {
+        username: '',
+        password: ''
+      },
+      methods: {
+        login: function () {
+          app
+          .authenticate({type: 'local', 'name':this.username, 'password': this.password})
+          .then(function () { window.location.href = "/admin.html"; });
+        }
+      }
+     }) 
+    </script>
   </body>
 </html>
