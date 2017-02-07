@@ -4,7 +4,7 @@
 
 ## About
 
-This project was created by [Balte de Wit](http://balte.nl) as his end project (Profiel Werkstuk) at (CSG Prins Maurits)[http://csgpm.nl]. This project's goal is to provide community based TV channels with a very powerful multi channel digital intercom system.
+This project was created by [Balte de Wit](http://balte.nl) as his end project (Profiel Werkstuk) at [CSG Prins Maurits](http://csgpm.nl). This project's goal is to provide community based TV channels with a very powerful multi channel digital intercom system.
 
 ## Getting Started
 

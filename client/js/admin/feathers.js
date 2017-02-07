@@ -5,12 +5,12 @@ app.authenticate()
     authenticated = true;
 
     config = {
-      uri: res.data._id+'@192.168.0.105',
+      uri: res.data._id + '@192.168.0.105',
       wsServers: 'wss://192.168.0.105:7443',
       authorizationUser: res.data._id,
       password: '4321',
       iceCheckingTimeout: 180000,
-      log: {builtinEnabled: false}
+      log: { builtinEnabled: false }
     }
     ua = new SIP.UA(config);
 
@@ -40,7 +40,7 @@ app.authenticate()
           for (user in channel.users) {
             if (user === controls.self._id) {
               sessions[channel._id] = new session(ua, channel.room, config) /*ua.invite(channel.room.toString(), options);
-              sessions[channel._id].mute();*/
+                sessions[channel._id].mute();*/
               controls.channels.push({
                 _id: channel._id,
                 name: channel.name,
@@ -82,7 +82,7 @@ channels.on('updated', res => {
     2 we do not have channel
       1 we are in channel => add channel
   */
-  
+
   var hasChannel;
   var resHasId = res.users[controls.self._id] !== undefined;
   for (var channel of controls.channels) {
@@ -126,7 +126,7 @@ users.on('updated', res => {
 users.on('removed', res => {
   for (var u in admin.users) {
     if (admin.users[u]._id === res._id) {
-      admin.users.splice(u,1);
+      admin.users.splice(u, 1);
     }
   }
 })
@@ -134,7 +134,7 @@ users.on('removed', res => {
 temps.on('updated', res => {
   for (var user in admin.new_users) {
     if (admin.new_users[user]._id === res._id) {
-      console.log('user '+res._id+' was updated');
+      console.log('user ' + res._id + ' was updated');
       if (res.newuser === false) {
         admin.temps.push(res);
         admin.new_users.splice(user, 1);
@@ -149,7 +149,7 @@ temps.on('created', res => {
 temps.on('removed', res => {
   for (var u in admin.temps) {
     if (admin.temps[u]._id === res._id) {
-      admin.temps.splice(u,1);
+      admin.temps.splice(u, 1);
     }
   }
 })

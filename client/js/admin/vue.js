@@ -1,4 +1,4 @@
-admin = new Vue({
+var admin = new Vue({
   debug: true,
   el: '#admin',
   data: {

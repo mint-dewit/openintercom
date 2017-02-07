@@ -1,10 +1,18 @@
-$('.modal').modal()
+'use strict'
+
+// npm modules
+window.jQuery = window.$ = require('jquery');
+var materialize = require('/media/chrx/Archive/GalliumDocs/openintercom/node_modules/materialize-css/bin/materialize.js');
+require('materialize-loader');
+var Vue = require('vue');
+
+$('.modal').modal({dismissible: false});
 
 var key_order = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'];
 var ptt_ignore = [];
 var ptt_pushed = [];
-var authenticated = false;
-var sessions = {};
+var sessions = [];
+var admin;
 
 const socket = io();
 
@@ -15,11 +23,13 @@ const app = feathers()
     storage: window.localStorage
   }));
 
-const users = app.service('users');
 const channels = app.service('channels');
 const temps = app.service('temps');
+var user_id = window.localStorage._id;
 
 var ua;
+var sessions;
+var config;
 var options = {
   media: {
     constraints: {
@@ -34,6 +44,3 @@ var options = {
 
 $(document).on('keydown', (event) => {controls.pushToTalk(event.key, 'down')});
 $(document).on('keyup', (event) => {controls.pushToTalk(event.key, 'up')});
-
-$('input[type=text]').on('click', ()=>{admin.sub_interface = true});
-$('input[type=text]').on('focusout', ()=>{admin.sub_interface = false});

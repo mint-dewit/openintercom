@@ -19,7 +19,8 @@
     "test": "npm run jshint && npm run mocha",
     "jshint": "jshint src/. test/. --config",
     "start": "node src/",
-    "mocha": "mocha test/ --recursive"
+    "mocha": "mocha test/ --recursive",
+    "watch": "webpack --watch"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
@@ -35,15 +36,25 @@
     "feathers-nedb": "^2.6.0",
     "feathers-rest": "^1.5.2",
     "feathers-socketio": "^1.4.2",
+    "jquery": "^3.1.1",
+    "json-loader": "^0.5.4",
+    "materialize-css": "^0.97.8",
+    "materialize-loader": "^1.1.1",
     "nedb": "^1.8.0",
     "passport": "^0.3.2",
     "serve-favicon": "^2.3.2",
+    "sip.js": "^0.7.6",
+    "vue": "^2.1.8",
+    "webpack": "^1.14.0",
     "winston": "^2.3.0",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
+    "file-loader": "^0.9.0",
     "jshint": "^2.9.4",
     "mocha": "^3.1.2",
-    "request": "^2.79.0"
+    "request": "^2.79.0",
+    "script-loader": "^0.7.0",
+    "url-loader": "^0.5.7"
   }
 }

@@ -4,9 +4,6 @@
     
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     
-    <!--Import materialize.css-->
-    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
-    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style type="text/css">
@@ -45,35 +42,6 @@
       </div>
     </div>
     
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-    <script type="text/javascript" src="js/materialize.min.js"></script>
-    <script src="https://unpkg.com/vue/dist/vue.js"></script>
-    <script src="//rawgit.com/feathersjs/feathers-client/v1.7.1/dist/feathers.js"></script>
-    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-    <script type="text/javascript">
-      const socket = io();
-
-      const app = feathers()
-        .configure(feathers.socketio(socket))
-        .configure(feathers.hooks())
-        .configure(feathers.authentication({
-          storage: window.localStorage
-        }));
-
-     new Vue({
-      el: '#login',
-      data: {
-        username: '',
-        password: ''
-      },
-      methods: {
-        login: function () {
-          app
-          .authenticate({type: 'local', 'name':this.username, 'password': this.password})
-          .then(function () { window.location.href = "/admin.html"; });
-        }
-      }
-     }) 
-    </script>
+    <script src="dist/login.bundle.js"></script>
   </body>
 </html>
