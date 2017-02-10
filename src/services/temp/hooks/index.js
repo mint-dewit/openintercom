@@ -17,9 +17,15 @@ exports.before = {
   get: [],
   create: [
     register()],
-  update: [],
-  patch: [],
-  remove: []
+  update: [
+    auth.verifyToken(),
+    auth.restrictToAuthenticated()],
+  patch: [
+    auth.verifyToken(),
+    auth.restrictToAuthenticated()],
+  remove: [
+    auth.verifyToken(),
+    auth.restrictToAuthenticated()]
 };
 
 exports.after = {
