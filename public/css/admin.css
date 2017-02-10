@@ -1,0 +1,39 @@
+.controls {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+.controls .name {
+    line-height: 38px;
+    float: left;
+}
+
+.controls .row {
+    margin-bottom: 0;
+}
+
+.large {
+ height: 75px;
+}
+
+.channel-button {
+    margin: 5px;
+    height: 65px;
+    max-width: 110px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.switch-mute {
+    float: left;
+    margin-top: 15px;
+    max-width: 75px;
+    margin-right: 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.drop-area {
+    min-height: 100px;
+}

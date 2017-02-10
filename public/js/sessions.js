@@ -10,21 +10,10 @@ var options = {
   }
 };
 
-var sessionHandler = class sessionHandler {
-	constructor (options) {
-		this.UA = new SIP.UA(options);
-		this.sessions = {};
-		this.newSession = function (channel) {
-			this.sessions[channel._id] = new session(this.UA, channel.room, options);
-		}
-		this.endSession = function (channel) {
-			for (id in this.sessions) {
-				if (id === channel._id) sessions[id].end();
-			}
-		};
-	}
-}
-
+/*
+This class allows for easy handling of sipjs sessions. 
+Especially useful because we need to mute the session upon initialization.
+*/
 var session = class Session {
 	constructor (ua, room, config) {
 		this.session = ua.invite(room.toString(), options)
