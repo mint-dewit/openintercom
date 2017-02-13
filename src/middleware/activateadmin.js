@@ -33,8 +33,8 @@ module.exports = function(app) {
               res.set('connection','close');
               res.end();
             });
-            tempsDb.remove({_id: req.body._id}, {}, () => console.log('temp removed.'));
-            tokensDb.remove({temp: req.body._id, key: req.body.key}, {}, () => console.log('token removeds'));
+            app.service('temps').remove({_id: req.body._id});
+            app.service('tokens').remove({temp: req.body._id});
           })
         }
       })
