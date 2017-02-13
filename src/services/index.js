@@ -1,4 +1,5 @@
 'use strict';
+const token = require('./token');
 const temp = require('./temp');
 const channels = require('./channels');
 const authentication = require('./authentication');
@@ -12,4 +13,5 @@ module.exports = function() {
   app.configure(user);
   app.configure(channels);
   app.configure(temp);
+  app.configure(token);
 };

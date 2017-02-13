@@ -110,15 +110,20 @@
       <div id="newAdmin" class="modal">
         <div class="modal-content">
           <h4 v-else>You are now an admin!</h4>
-          <p v-else>Please enter a password to be able to log in to the administrator interface.</p>
+          <p v-else>Your account was activated as an admin account. Please enter the verification code you received from your system admin.</p>
 
           <div class="input-field">
-            <input id="pwd" type="password" v-model="self.password">
-            <label for="pwd">Name:</label>
+            <input id="pwd" type="password" v-model="auth.code">
+            <label for="pwd">Activation code:</label>
+          </div>
+
+          <div class="input-field">
+            <input id="pwd" type="password" v-model="auth.password">
+            <label for="pwd">Password:</label>
           </div>
 
           <div class="modal-footer">
-            <a href="#!" class="modal-action modal-close waves-effect waves-green btn" v-click="savePwd">Save and continue</a>
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn" v-click="registerAccount">Save and continue</a>
           </div>
         </div>
       </div>
@@ -134,7 +139,7 @@
 
     <script src="js/mobile.js"></script>
     <script src="js/sessions.js"></script>
-    <script src="js/admin/vue-controls.js"></script>
+    <script src="js/vue-controls.js"></script>
     <script src="js/client/feathers.js"></script>
     <script type="text/javascript">$('.modal').modal({'dismissable': false})</script>
   </body>
