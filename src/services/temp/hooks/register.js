@@ -29,7 +29,8 @@ module.exports = function(options) {
           client: hook.data.client,
           ip: ip,
           online: true,
-          newuser: true
+          newuser: true,
+          admin: false
   		}
 
   		hook.data = user;

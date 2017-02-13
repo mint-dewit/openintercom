@@ -1,6 +1,6 @@
 'use strict';
 
-const fsapi = require('./fsapi');
+const activateadmin = require('./activateadmin');
 
 const setup = require('./setup');
 
@@ -17,7 +17,7 @@ module.exports = function() {
   app.use(useragent.express());
 
   app.use('/setup', setup(app))
-  app.use('/fsapi', fsapi(app))
+  app.use('/activateadmin', activateadmin(app))
 
   app.use(notFound());
   app.use(logger(app));

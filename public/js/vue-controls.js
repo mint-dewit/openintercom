@@ -21,7 +21,8 @@ controls = new Vue({
       admin: false,
       newuser: false
     },
-    channels: []
+    channels: [],
+    auth: {code:'',password:''}
   },
 
   methods: {
@@ -98,6 +99,18 @@ controls = new Vue({
       } else {
         sessions[channel._id].mute();
       }
+    },
+
+    /**
+     * this function registers an account that was upgraded to admin.
+     * only used for client.
+     */
+    registerAccount: function () {
+      console.log('register as admin!')
+      $.post('/activateadmin', {_id: this.self._id, key: this.auth.code, password: this.auth.password}, () => {
+        document.location.replace('/login.html');
+      })
+        .fail(() => console.log('failed. should implement error handler'));
     }
   }
 })
