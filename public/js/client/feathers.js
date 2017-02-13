@@ -83,10 +83,6 @@ temps.on('updated', (res) => {
 		if (controls.self.newuser && res.newuser === false) {
 			$('#newUser').modal('close');
 
-			if (res.admin === true) {
-				$('#newAdmin').modal('open');
-			}
-
 			config = {
 				uri: res._id + '@' + window.location.hostname,
 				wsServers: 'wss://' + window.location.hostname + ':7443',

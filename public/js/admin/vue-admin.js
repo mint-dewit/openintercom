@@ -69,18 +69,9 @@ admin = new Vue({
      * admin is registering a new user.
      */
     addUser: function (user) {
-      if (user.admin) {
-        tokens.create({temp: user._id}).then((data) => {
-          console.log(data); // ==> todo: display code in gui.
-          user.newuser = false;
-          user.admin = false;
-          temps.update(user._id, user);
-        });
-      }
-      else {
-        user.newuser = false;
-        temps.update(user._id, user);
-      }
+      console.log(user)
+      user.newuser = false;
+      temps.update(user._id, user);
     },
 
     /**
