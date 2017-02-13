@@ -95,7 +95,6 @@
           <p v-else>Please wait until you are allowed access to the system by an administrator.</p>
         </div>
       </div>
-    </div>
 
       <!-- Modal for being deleted -->
       <div id="delUser" class="modal">
@@ -104,16 +103,15 @@
           <p class="red-text">Unfortunately your user was removed by an admin.</p>
         </div>
       </div>
-    </div>
 
       <!-- Modal for admin pwd -->
       <div id="newAdmin" class="modal">
         <div class="modal-content">
-          <h4 v-else>You are now an admin!</h4>
-          <p v-else>Your account was activated as an admin account. Please enter the verification code you received from your system admin.</p>
+          <h4>You are now an admin!</h4>
+          <p>Your account was activated as an admin account. Please enter the verification code you received from your system admin.</p>
 
           <div class="input-field">
-            <input id="pwd" type="password" v-model="auth.code">
+            <input id="pwd" type="text" v-model="auth.code">
             <label for="pwd">Activation code:</label>
           </div>
 
@@ -123,10 +121,11 @@
           </div>
 
           <div class="modal-footer">
-            <a href="#!" class="modal-action modal-close waves-effect waves-green btn" v-click="registerAccount">Save and continue</a>
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn" v-on:click="registerAccount">Save and continue</a>
           </div>
         </div>
       </div>
+    </div>
 
     <script src="js/lib/jquery-3.1.1.min.js"></script>
     <script type="text/javascript" src="js/lib/materialize.min.js"></script>

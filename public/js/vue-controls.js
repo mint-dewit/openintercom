@@ -19,10 +19,10 @@ controls = new Vue({
       client: '',
       ip: '',
       admin: false,
-      newuser: false,
-      auth: {code:'',password:''}
+      newuser: false
     },
-    channels: []
+    channels: [],
+    auth: {code:'',password:''}
   },
 
   methods: {
@@ -105,7 +105,8 @@ controls = new Vue({
      * this function registers an account that was upgraded to admin.
      * only used for client.
      */
-    activateAccount: function () {
+    registerAccount: function () {
+      console.log('register as admin!')
       $.post('/activateadmin', {_id: this.self._id, key: this.auth.code, password: this.auth.password}, () => {
         document.location.replace('/login.html');
       })

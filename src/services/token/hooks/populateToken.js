@@ -15,6 +15,7 @@ module.exports = function(options) {
   return function(hook) {
     return new Promise((resolve, reject) => {
       hook.data.key = keygen.password({length: 8, forceUppercase: true});
+      resolve(hook);
     });
     hook.populateToken = true;
   };

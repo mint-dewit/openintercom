@@ -40,8 +40,7 @@ exports.before = {
   remove: [
     auth.verifyToken(),
     auth.populateUser(),
-    auth.restrictToAuthenticated(),
-    auth.restrictToOwner({ ownerField: '_id' })
+    auth.restrictToAuthenticated()
   ]
 };
 

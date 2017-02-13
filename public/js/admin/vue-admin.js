@@ -73,7 +73,6 @@ admin = new Vue({
         tokens.create({temp: user._id}).then((data) => {
           console.log(data); // ==> todo: display code in gui.
           user.newuser = false;
-          user.admin = false;
           temps.update(user._id, user);
         });
       }
