@@ -17,7 +17,8 @@ admin = new Vue({
     },
     users: [],
     temps: [],
-    new_users: []
+    new_users: [],
+    codes: []
   },
 
   methods: {
@@ -71,7 +72,8 @@ admin = new Vue({
     addUser: function (user) {
       if (user.admin) {
         tokens.create({temp: user._id}).then((data) => {
-          console.log(data); // ==> todo: display code in gui.
+          this.codes.push({name: user.name, value: data.key});
+          $('#display_codes').modal('open');
           user.newuser = false;
           temps.update(user._id, user);
         });
@@ -80,6 +82,13 @@ admin = new Vue({
         user.newuser = false;
         temps.update(user._id, user);
       }
+    },
+
+    /**
+     * admin has seen and (hopefully) saved activation codes.
+     */
+    clearCodes: function () {
+      this.codes = [];
     },
 
     /**
