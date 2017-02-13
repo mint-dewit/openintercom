@@ -45,6 +45,15 @@ __16.12.1__
 
 - First actually working project, with many bugs still
 
+__1.3.0__
+
+- Missed a lot of version updates, but I am now using semver!
+- Added actual voip sessions (1.1)
+- Added client page (1.2)
+- Added user -> admin upgrade (1.3)
+
+Just because the version is greater than 1.0 now does not mean this is a released software. I am using semver as in breaking.feature.fix, releases should have actual names!
+
 ## License
 
 Copyright (c) 2016
