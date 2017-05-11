@@ -141,7 +141,7 @@ channels.on('updated', res => {
 		else {
 			for (var i in controls.channels) {
 				if (controls.channels[i]._id === res._id) {
-					sessions[res._id].bye();
+					sessions[res._id].end();
 					controls.channels.splice(i, 1);
 				}
 			}
