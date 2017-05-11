@@ -137,6 +137,10 @@ admin = new Vue({
       this.sub_interface = false;
     },
 
+    openRegisterChannel: function () {
+      $('#add_channel').modal('open');
+    },
+
     /**
      * drag and drop events and logic.
      */
