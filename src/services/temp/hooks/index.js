@@ -1,7 +1,5 @@
 'use strict';
 
-const freeswitch = require('./freeswitch');
-
 const register = require('./register');
 
 const globalHooks = require('../../../hooks');
@@ -32,7 +30,7 @@ exports.after = {
   all: [],
   find: [],
   get: [],
-  create: [globalHooks.fsAddUser()],
+  create: [],
   update: [],
   patch: [],
   remove: []
