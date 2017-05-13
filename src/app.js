@@ -13,6 +13,7 @@ const bodyParser = require('body-parser');
 const socketio = require('feathers-socketio');
 const middleware = require('./middleware');
 const services = require('./services');
+const mediaserver = require('./mediaserver');
 
 const app = feathers();
 
@@ -26,6 +27,7 @@ app.use(compress())
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
   .configure(hooks())
+  .configure(mediaserver)
   .configure(rest())
   .configure(socketio())
   .configure(services)

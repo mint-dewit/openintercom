@@ -10,6 +10,7 @@ const users = app.service('users');
 const channels = app.service('channels');
 const temps = app.service('temps');
 const tokens = app.service('tokens');
+const connections = app.service('connections');
 
 var authenticated = false;
 
@@ -21,16 +22,8 @@ app.authenticate()
     admin.self = res.data;
     controls.self = res.data;
     authenticated = true;
-
-    config = {
-      uri: res.data._id + '@' + window.location.hostname,
-      wsServers: 'wss://' + window.location.hostname + ':7443',
-      authorizationUser: res.data._id,
-      password: '4321',
-      iceCheckingTimeout: 180000,
-      log: { builtinEnabled: false }
-    }
-    ua = new SIP.UA(config);
+    
+    // @todo: init RTCPeerConnection? or nahh
 
     /**
      * fetch admin list
@@ -65,7 +58,7 @@ app.authenticate()
         for (channel of res) {
           for (user in channel.users) {
             if (user === controls.self._id) {
-              sessions[channel._id] = new session(ua, channel.room, config);
+              sessions[channel._id] = new session(connections, channel._id, controls.self._id);
               controls.channels.push({
                 _id: channel._id,
                 name: channel.name,
@@ -134,13 +127,13 @@ channels.on('updated', res => {
       for (i in controls.channels) {
         if (controls.channels[i]._id === res._id) {
           controls.channels.splice(i, 1);
-          sessions[res._id].bye();
+          sessions[res._id].end();
         }
       }
     }
   } else {
     if (resHasId) {
-      sessions[res._id] = new session(ua, res.room, options);
+      sessions[res._id] = new session(connections, res._id, controls.self._id);
       controls.channels.push({
         _id: res._id,
         name: res.name,

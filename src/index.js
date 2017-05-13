@@ -17,12 +17,14 @@ app.setup(server);
 app.io.on('connection', (socket)=>{
 	socket.on('disconnect', ()=>{
 		var ip = socket.handshake.address;
+		let clientId;
 		if (ip === '::1') ip = 'localhost';
 		else if (ip.substr(0,7) === '::ffff:') ip = ip.split(':')[3];
 		app.service('users').find().then(res=>{
 			for (var user of res) {
 				if (user.ip === ip) {
 					user.online = false;
+					removeConnections(user._id);
 					console.log('user disconnect',user._id)
 					app.service('users').update(user._id, user);
 				}
@@ -32,11 +34,21 @@ app.io.on('connection', (socket)=>{
 			for (var user of res) {
 				if (user.ip === ip) {
 					user.online = false;
+					removeConnections(user._id);
 					console.log('user disconnect',user._id)
 					app.service('temps').update(user._id, user);
 				}
 			}
-		})
+		});
+		let removeConnections = function (clientId) {
+			app.service('connections').find().then(res => {
+				for (let conn of res) {
+					if (conn.clientId === clientId) {
+						app.service('connections').remove(conn._id);
+					}
+				}
+			})
+		}
 	});
 })
 

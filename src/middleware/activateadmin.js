@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path');
-const NeDB = require('nedb')
+const NeDB = require('nedb');
 
 module.exports = function(app) {
   return function(req, res, next) {

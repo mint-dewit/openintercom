@@ -4,11 +4,14 @@ const globalHooks = require('../../../hooks');
 const hooks = require('feathers-hooks');
 const auth = require('feathers-authentication').hooks;
 
+const createChannel = require('./create-channel')
+const removeChannel = require('./remove-channel');
+
 exports.before = {
   all: [],
   find: [],
   get: [],
-  create: [,
+  create: [],
   update: [],
   patch: [],
   remove: []
@@ -18,8 +21,8 @@ exports.after = {
   all: [],
   find: [],
   get: [],
-  create: [],
+  create: [createChannel()],
   update: [],
   patch: [],
-  remove: []
+  remove: [removeChannel()]
 };

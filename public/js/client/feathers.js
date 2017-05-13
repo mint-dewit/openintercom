@@ -9,6 +9,7 @@ const app = feathers()
 
 const channels = app.service('channels');
 const temps = app.service('temps');
+const connections = app.service('connections');
 
 /**
  * upon page load: retrieve channels, and check if our machine has saved a user id
@@ -25,18 +26,9 @@ channels.find()
 				.then(res => {
 					if (res.newuser === true) $('#newUser').modal('open');
 					else {
-						config = {
-							uri: res._id + '@' + window.location.hostname,
-							wsServers: 'wss://' + window.location.hostname + ':7443',
-							authorizationUser: res._id,
-							password: '4321',
-							iceCheckingTimeout: 180000,
-							log: { builtinEnabled: false }
-						}
-						ua = new SIP.UA(config);
 						for (let channel of channels) {
 							if (channel.users[res._id] !== undefined) {
-								sessions[channel._id] = new session(ua, channel.room, options);
+								sessions[channel._id] = new session(connections, channel._id, res._id);
 								controls.channels.push({
 									_id: channel._id,
 									name: channel.name,
@@ -87,21 +79,12 @@ temps.on('updated', (res) => {
 				$('#newAdmin').modal('open');
 			}
 
-			config = {
-				uri: res._id + '@' + window.location.hostname,
-				wsServers: 'wss://' + window.location.hostname + ':7443',
-				authorizationUser: res._id,
-				password: '4321',
-				iceCheckingTimeout: 180000,
-				log: { builtinEnabled: false }
-			}
-			ua = new SIP.UA(config);
 
 			channels.find()
 				.then(channels => {
 					for (let channel of channels) {
 						if (channel.users[res._id] !== undefined) {
-							sessions[channel._id] = new session(ua, channel.room, options)
+							sessions[channel._id] = new session(connections, channel._id, res._id)
 							controls.channels.push({
 								_id: channel._id,
 								name: channel.name,
@@ -148,7 +131,7 @@ channels.on('updated', res => {
 		}
 	} else {
 		if (resHasId) {
-			sessions[res._id] = new session(ua, res.room, options)
+			sessions[res._id] = new session(connections, res._id, controls.self._id)
 			sessions[res._id].mute();
 			controls.channels.push({
 				_id: res._id,

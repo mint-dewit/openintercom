@@ -4,6 +4,7 @@ const temp = require('./temp');
 const channels = require('./channels');
 const authentication = require('./authentication');
 const user = require('./user');
+const connection = require('./connection');
 
 module.exports = function() {
   const app = this;
@@ -14,4 +15,5 @@ module.exports = function() {
   app.configure(channels);
   app.configure(temp);
   app.configure(token);
+  app.configure(connection);
 };

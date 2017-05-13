@@ -28,4 +28,11 @@ module.exports = function(){
 
   // Set up our after hooks
   channelsService.after(hooks.after);
+
+  // Create mediaRooms
+  app.service('channels').find().then((results) => {
+    for (let channel of results) {
+      app.mediaHooks.createRoom(channel._id);
+    }
+  })
 };
