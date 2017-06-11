@@ -120,19 +120,21 @@ channels.on('updated', res => {
 			hasChannel.muted = !(res.users[controls.self._id])
 			if (hasChannel.muted && hasChannel.talking) hasChannel.talking = false;
 			if (hasChannel.muted) sessions[res._id].mute();
+			console.log('usr was muted by admin');
 		}
 		else {
 			for (var i in controls.channels) {
 				if (controls.channels[i]._id === res._id) {
 					sessions[res._id].end();
 					controls.channels.splice(i, 1);
+					console.log('usr was removed from channel')
 				}
 			}
 		}
 	} else {
 		if (resHasId) {
 			sessions[res._id] = new session(connections, res._id, controls.self._id)
-			sessions[res._id].mute();
+			console.log('channel was added.')
 			controls.channels.push({
 				_id: res._id,
 				name: res.name,
